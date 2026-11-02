@@ -1,0 +1,19 @@
+{
+  "name": "weather-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "icons": "node scripts/make-icons.mjs",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.5",
+    "vite": "^6.3.5",
+    "vitest": "^3.2.7"
+  }
+}
