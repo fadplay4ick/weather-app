@@ -193,3 +193,194 @@ ul {
   font-size: 1.125rem;
   cursor: pointer;
 }
+
+.strip {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.strip::-webkit-scrollbar {
+  display: none;
+}
+
+.day {
+  display: grid;
+  flex: none;
+  justify-items: center;
+  gap: 2px;
+  min-width: 60px;
+  padding: 10px 8px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--tile);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.day-name,
+.day-temp {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.day-number {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.day.selected {
+  background: var(--accent);
+}
+
+.day.selected .day-name,
+.day.selected .day-number,
+.day.selected .day-temp {
+  color: var(--bg);
+}
+
+.empty-day {
+  padding: 40px 0;
+  color: var(--muted);
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.cards {
+    grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+}
+
+.card.hero {
+  grid-row: span 2;
+}
+
+.card.hero:only-child {
+  grid-column: 1 / -1;
+}
+
+.cards .card:not(.hero) {
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+}
+
+.cards .card:not(.hero) .card-head > div {
+  min-width: 0;
+}
+
+.cards .card:not(.hero) .card-label {
+  font-size: 1rem;
+}
+
+.cards .card:not(.hero) .weather-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.cards .card:not(.hero) .card-temp {
+  font-size: 2.25rem;
+}
+
+.cards .card:not(.hero) .card-outfit {
+  margin-top: 8px;
+  font-size: 0.9375rem;
+}
+
+.cards .card:not(.hero) .chips {
+  margin-top: 10px;
+}
+
+.cards .card:not(.hero) .chip {
+  gap: 6px;
+  padding: 6px 10px 6px 8px;
+  font-size: 0.8125rem;
+}
+
+.cards .card:not(.hero) .chip-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.card.hero {
+  display: flex;
+  flex-direction: column;
+}
+
+.card.hero .card-temp {
+  margin-top: auto;
+  font-size: 5rem;
+}
+
+.cards .card:not(.hero) .card-temp {
+  margin-top: auto;
+}
+
+.card.hero .card-outfit {
+  font-size: 1.375rem;
+}
+
+.card.hero .chip {
+  font-size: 0.875rem;
+}
+
+body {
+  overscroll-behavior-x: none;
+}
+
+.header-note {
+  margin-top: 6px;
+  color: var(--accent);
+  font-size: 0.9375rem;
+}
+
+
+h2 {
+  margin: 0;
+}
+
+.section-title {
+  margin: 24px 8px 12px;
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
+.rates-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.rate-tile {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+  border-radius: var(--radius-card);
+  background: var(--tile);
+}
+
+.rate-code {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.rate-value {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.rate-change {
+  min-height: 1.1em;
+  font-size: 0.875rem;
+}
+
+.rate-change.up {
+  color: var(--accent);
+}
+
+.rate-change.down {
+  color: var(--muted);
+}

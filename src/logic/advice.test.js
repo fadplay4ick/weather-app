@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { CHECKPOINTS, CLOTHING_BANDS, MESSAGES } from '../config.js'
+import { CHECKPOINTS, CLOTHING_BANDS, MESSAGES, PRECIPITATION_WINDOWS } from '../config.js'
 import { buildDayAdvice } from './advice.js'
 
 function makeReading(overrides = {}) {
@@ -110,5 +110,53 @@ describe('нет данных', () => {
   it('без данных для дня вечернее предупреждение не падает', () => {
     const advice = adviceFor({ afternoon: null })
     expect(find(advice, 'evening').warnings).not.toContain(MESSAGES.eveningDrop)
+  })
+})
+
+describe('осадки за 6 часов', () => {
+  const longWindow = PRECIPITATION_WINDOWS.long
+
+  function warningsFor(overrides) {
+    const advice = adviceFor({ morning: makeReading(overrides) })
+    return find(advice, 'morning').warnings
+  }
+
+  it('0 мм: предупреждения нет', () => {
+    const warnings = warningsFor({ precipitation: 0, precipitationWindow: longWindow })
+    expect(warnings).not.toContain(MESSAGES.rain)
+    expect(warnings).not.toContain(MESSAGES.rainPossible)
+  })
+
+  it('0.4 мм ниже порога: предупреждения нет', () => {
+    const warnings = warningsFor({ precipitation: 0.4, precipitationWindow: longWindow })
+    expect(warnings).not.toContain(MESSAGES.rainPossible)
+  })
+
+  it('0.5 мм: мягкое предупреждение', () => {
+    const warnings = warningsFor({ precipitation: 0.5, precipitationWindow: longWindow })
+    expect(warnings).toContain(MESSAGES.rainPossible)
+    expect(warnings).not.toContain(MESSAGES.rain)
+  })
+
+  it('часовая запись 0.1 мм: прежнее предупреждение', () => {
+    const warnings = warningsFor({
+      precipitation: 0.1,
+      precipitationWindow: PRECIPITATION_WINDOWS.short,
+    })
+    expect(warnings).toContain(MESSAGES.rain)
+  })
+})
+
+describe('нет данных об осадках', () => {
+  it.each([
+    ['часовая запись', undefined],
+    ['6-часовая запись', PRECIPITATION_WINDOWS.long],
+  ])('%s: precipitation = null не даёт предупреждения', (_, precipitationWindow) => {
+    const advice = adviceFor({
+      morning: makeReading({ precipitation: null, precipitationWindow }),
+    })
+    const { warnings } = find(advice, 'morning')
+    expect(warnings).not.toContain(MESSAGES.rain)
+    expect(warnings).not.toContain(MESSAGES.rainPossible)
   })
 })

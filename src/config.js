@@ -14,6 +14,12 @@ export const CHECKPOINTS = [
 export const COMFORT_SHIFT = 3
 export const WIND_LIMIT = 8
 export const EVENING_DROP = 3
+export const MAX_READING_DISTANCE_HOURS = 3
+export const HISTORY_FORECAST_DAYS = 7
+export const HISTORY_KEEP_DAYS = 30
+export const APPROXIMATE_FROM_DAYS = 4
+export const RAIN_THRESHOLD_6H_MM = 0.5
+export const PRECIPITATION_WINDOWS = { short: 1, long: 6 }
 
 export const CLOTHING_BANDS = [
   { below: -10, summary: 'Зимняя куртка, тёплая кофта, шапка и перчатки' },
@@ -27,6 +33,12 @@ export const CLOTHING_BANDS = [
 
 export const MESSAGES = {
   rain: 'Осадки: возьми зонт или капюшон',
+  rainPossible: 'Возможен дождь: зонт не помешает',
   wind: 'Сильный ветер: нужна ветрозащита',
   eveningDrop: 'Вечером заметно холоднее, чем днём: не убирай куртку в рюкзак',
 }
+
+
+export const RATES_URL = 'https://www.cbr-xml-daily.ru/daily_json.js'
+export const RATES_CURRENCIES = ['USD', 'EUR', 'CNY']
+export const RATES_TIMEOUT_MS = 8000

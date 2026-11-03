@@ -1,4 +1,12 @@
-import { CLOTHING_BANDS, COMFORT_SHIFT, EVENING_DROP, MESSAGES, WIND_LIMIT } from '../config.js'
+import {
+  CLOTHING_BANDS,
+  COMFORT_SHIFT,
+  EVENING_DROP,
+  MESSAGES,
+  PRECIPITATION_WINDOWS,
+  RAIN_THRESHOLD_6H_MM,
+  WIND_LIMIT,
+} from '../config.js'
 import { calcFeelsLike } from './feelsLike.js'
 
 function roundToTenth(value) {
@@ -13,10 +21,17 @@ function pickOutfit(temperature) {
   return CLOTHING_BANDS.find((band) => temperature < band.below).summary
 }
 
-function pickWarnings({ precipitation, wind }) {
-  const warnings = []
-  if (precipitation > 0) warnings.push(MESSAGES.rain)
-  if (wind >= WIND_LIMIT) warnings.push(MESSAGES.wind)
+function pickRainMessage({ precipitation, precipitationWindow }) {
+  if (precipitationWindow === PRECIPITATION_WINDOWS.long) {
+    return precipitation >= RAIN_THRESHOLD_6H_MM ? MESSAGES.rainPossible : null
+  }
+  return precipitation > 0 ? MESSAGES.rain : null
+}
+
+function pickWarnings(reading) {
+  const rain = pickRainMessage(reading)
+  const warnings = rain ? [rain] : []
+  if (reading.wind >= WIND_LIMIT) warnings.push(MESSAGES.wind)
   return warnings
 }
 

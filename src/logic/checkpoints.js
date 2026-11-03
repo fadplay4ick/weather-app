@@ -1,6 +1,21 @@
-import { CHECKPOINTS } from '../config.js'
+import { CHECKPOINTS, MAX_READING_DISTANCE_HOURS } from '../config.js'
 
-function addDays(dateKey, days) {
+const MS_PER_HOUR = 3600000
+
+function toMs(timeKey) {
+  return Date.parse(`${timeKey}Z`)
+}
+
+function distanceHours(reading, targetMs) {
+  return Math.abs(toMs(reading.time) - targetMs) / MS_PER_HOUR
+}
+
+function byProximity(targetMs) {
+  return (a, b) =>
+    distanceHours(a, targetMs) - distanceHours(b, targetMs) || toMs(a.time) - toMs(b.time)
+}
+
+export function addDays(dateKey, days) {
   const date = new Date(`${dateKey}T12:00:00Z`)
   date.setUTCDate(date.getUTCDate() + days)
   return date.toISOString().slice(0, 10)
@@ -17,8 +32,11 @@ export function getTargetDate(readings) {
 }
 
 function findReading(readings, date, hour) {
-  const key = `${date}T${String(hour).padStart(2, '0')}:00`
-  return readings.find((reading) => reading.time === key)
+  const targetMs = toMs(`${date}T${String(hour).padStart(2, '0')}:00`)
+  if (targetMs < toMs(readings[0].time)) return undefined
+  return readings
+    .filter((reading) => distanceHours(reading, targetMs) <= MAX_READING_DISTANCE_HOURS)
+    .sort(byProximity(targetMs))[0]
 }
 
 export function pickCheckpoints(readings, date) {

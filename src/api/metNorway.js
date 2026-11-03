@@ -1,4 +1,4 @@
-import { CITY } from '../config.js'
+import { CITY, PRECIPITATION_WINDOWS } from '../config.js'
 import { toLocalKey } from '../utils/localTime.js'
 
 const BASE_URL = 'https://api.met.no/weatherapi/locationforecast/2.0/compact'
@@ -12,16 +12,27 @@ function buildUrl() {
   return `${BASE_URL}?${params}`
 }
 
-function toReading(entry) {
+function pickForecastWindow(data) {
+  if (data.next_1_hours) {
+    return { forecast: data.next_1_hours, hours: PRECIPITATION_WINDOWS.short }
+  }
+  if (data.next_6_hours) {
+    return { forecast: data.next_6_hours, hours: PRECIPITATION_WINDOWS.long }
+  }
+  return null
+}
+
+export function toReading(entry) {
   const { details } = entry.data.instant
-  const nextHour = entry.data.next_1_hours
+  const picked = pickForecastWindow(entry.data)
   return {
     time: toLocalKey(entry.time),
     temperature: details.air_temperature,
     wind: details.wind_speed,
     humidity: details.relative_humidity,
-    precipitation: nextHour?.details.precipitation_amount ?? null,
-    symbol: nextHour?.summary.symbol_code ?? null,
+    precipitation: picked?.forecast.details.precipitation_amount ?? null,
+    precipitationWindow: picked?.hours ?? null,
+    symbol: picked?.forecast.summary.symbol_code ?? null,
   }
 }
 
